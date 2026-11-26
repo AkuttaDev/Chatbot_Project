@@ -1,15 +1,38 @@
 <template>
   <div
-    class="min-h-screen bg-slate-950 text-slate-100 flex flex-col items-center justify-center px-4"
+    :class="
+      isDark ? 'bg-slate-950 text-slate-100' : 'bg-slate-100 text-slate-900'
+    "
+    class="min-h-screen flex flex-col justify-between px-4 transition-colors duration-200"
   >
-    <div class="max-w-md w-full text-center space-y-8">
+    <!-- Top Bar with Theme Switch -->
+    <header class="w-full max-w-5xl mx-auto pt-5 flex justify-end">
+      <button
+        type="button"
+        @click="toggleTheme"
+        :class="
+          isDark
+            ? 'bg-slate-900 border-slate-800 text-amber-300 hover:bg-slate-800'
+            : 'bg-white border-slate-200 text-slate-700 hover:bg-slate-50'
+        "
+        class="border px-3 py-1.5 rounded-xl text-xs font-medium shadow-sm transition-colors"
+      >
+        {{ isDark ? "☀️ Light" : "🌙 Dark" }}
+      </button>
+    </header>
+
+    <!-- Main Hero Section -->
+    <main class="max-w-md w-full mx-auto text-center space-y-8">
       <div class="space-y-3">
         <h1
           class="text-4xl font-extrabold tracking-tight bg-gradient-to-r from-indigo-400 via-purple-400 to-cyan-400 bg-clip-text text-transparent"
         >
           NexusMind
         </h1>
-        <p class="text-slate-400 text-sm md:text-base">
+        <p
+          :class="isDark ? 'text-slate-400' : 'text-slate-600'"
+          class="text-sm md:text-base"
+        >
           Your advanced AI chat and vision assistant. Seamlessly query models,
           analyze insights, and manage conversations.
         </p>
@@ -26,20 +49,40 @@
         </NuxtLink>
         <NuxtLink
           to="/login"
-          class="w-full sm:w-auto bg-slate-900 hover:bg-slate-800 border border-slate-800 text-slate-200 font-semibold px-6 py-3 rounded-xl transition-all text-center"
+          :class="
+            isDark
+              ? 'bg-slate-900 hover:bg-slate-800 border-slate-800 text-slate-200'
+              : 'bg-white hover:bg-slate-50 border-slate-200 text-slate-800'
+          "
+          class="w-full sm:w-auto border font-semibold px-6 py-3 rounded-xl transition-all text-center shadow-sm"
         >
           Sign In
         </NuxtLink>
       </div>
+    </main>
 
-      <div class="text-xs text-slate-600 pt-8">
-        Powered by Flask, OpenRouter, and Nuxt.js
-      </div>
-    </div>
+    <footer
+      :class="isDark ? 'text-slate-600' : 'text-slate-400'"
+      class="text-xs text-center pb-6"
+    >
+      Powered by Flask, OpenRouter, and Nuxt.js
+    </footer>
   </div>
 </template>
 
 <script setup>
-// No complex reactive logic needed for the simple landing page wrapper,
-// NuxtLink handles client-side routing automatically out of the box.
+import { ref, onMounted } from "vue";
+
+const isDark = ref(true);
+
+const toggleTheme = () => {
+  isDark.value = !isDark.value;
+  localStorage.setItem("themeMode", isDark.value ? "dark" : "light");
+};
+
+onMounted(() => {
+  if (localStorage.getItem("themeMode") === "light") {
+    isDark.value = false;
+  }
+});
 </script>
